@@ -53,8 +53,16 @@ const actions = {
     // 初始化新游戏
     initGame(classId) {
         const { CLASSES } = require('../static/game-config.js');
-        const classData = CLASSES[classId.toUpperCase()];
-        if (!classData) return false;
+        // 支持大小写
+        const upperClassId = classId.toUpperCase();
+        const classData = CLASSES[upperClassId];
+        
+        console.log('初始化游戏:', classId, '找到职业:', !!classData);
+        
+        if (!classData) {
+            console.error('未找到职业:', classId, '可用职业:', Object.keys(CLASSES));
+            return false;
+        }
         
         // 设置玩家属性
         state.player.classId = classId;
