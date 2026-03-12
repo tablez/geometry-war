@@ -4,7 +4,7 @@
  */
 
 import { reactive, readonly } from 'vue';
-import { CLASSES } from '../static/game-config.js';
+import { CLASSES, GAME_CONFIG } from '../static/game-config.js';
 import { WARRIOR_CARDS } from '../static/cards-complete.js';
 
 // 游戏状态
