@@ -13,7 +13,7 @@ export const CLASSES = {
         description: '高生命值，强力攻击',
         baseHp: 80,
         baseEnergy: 3,
-        startingDeck: ['strike', 'strike', 'strike', 'defend', 'defend']
+        startingDeck: ['strike', 'strike', 'strike', 'strike', 'defend', 'defend', 'defend', 'defend', 'pommel_strike', 'shrug_it_off']
     },
     MAGE: {
         id: 'mage',
