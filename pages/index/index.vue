@@ -57,48 +57,27 @@
 </template>
 
 <script>
+import { CLASSES } from '../../static/game-config.js'
+import { gameState, gameActions } from '../../store/gameStore.js'
+
 export default {
     data() {
         return {
             gamesPlayed: 0,
             bestScore: 0,
             selectedClass: -1,
-            classes: [
-                {
-                    name: '战士',
-                    icon: '■',
-                    color: '#e94560',
-                    description: '高生命值，强力攻击'
-                },
-                {
-                    name: '法师',
-                    icon: '▲',
-                    color: '#533483',
-                    description: '强大法术，群体伤害'
-                },
-                {
-                    name: '牧师',
-                    icon: '●',
-                    color: '#16c79a',
-                    description: '治疗回复，辅助增益'
-                },
-                {
-                    name: '刺客',
-                    icon: '◆',
-                    color: '#f9a825',
-                    description: '高暴击，快速连击'
-                }
-            ]
+            classes: Object.values(CLASSES)
         }
     },
     onLoad() {
-        // 加载本地存储的游戏数据
-        this.loadGameData()
+        // 加载游戏数据
+        gameActions.loadGameData()
+        this.gamesPlayed = gameState.gamesPlayed
+        this.bestScore = gameState.bestScore
     },
     methods: {
         // 动态生成形状样式
         shapeStyle(n) {
-            const shapes = ['■', '▲', '●', '◆', '★']
             const colors = ['#e94560', '#533483', '#16c79a', '#f9a825', '#0f3460']
             return {
                 left: `${Math.random() * 80}%`,
@@ -125,22 +104,23 @@ export default {
                 return
             }
             
-            // 保存选择的职业
-            uni.setStorageSync('selectedClass', this.selectedClass)
+            // 获取职业ID
+            const classId = this.classes[this.selectedClass].id
+            
+            // 初始化游戏
+            const success = gameActions.initGame(classId)
+            if (!success) {
+                uni.showToast({
+                    title: '初始化失败',
+                    icon: 'none'
+                })
+                return
+            }
             
             // 跳转到游戏页面
             uni.navigateTo({
                 url: '/pages/game/game'
             })
-        },
-        
-        // 加载游戏数据
-        loadGameData() {
-            const data = uni.getStorageSync('gameData')
-            if (data) {
-                this.gamesPlayed = data.gamesPlayed || 0
-                this.bestScore = data.bestScore || 0
-            }
         }
     }
 }
