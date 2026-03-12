@@ -172,10 +172,18 @@ export default {
             
             if (this.floorType === 'rest') {
                 // 进入休息处
-                uni.navigateTo({ url: '/pages/rest/rest' })
+                uni.navigateTo({ 
+                    url: '/pages/rest/rest',
+                    success: () => console.log('进入休息处'),
+                    fail: (err) => console.error('进入休息处失败:', err)
+                })
             } else if (this.floorType === 'shop') {
                 // 进入商店
-                uni.navigateTo({ url: '/pages/shop/shop' })
+                uni.navigateTo({ 
+                    url: '/pages/shop/shop',
+                    success: () => console.log('进入商店'),
+                    fail: (err) => console.error('进入商店失败:', err)
+                })
             } else {
                 // 进入战斗
                 // 设置敌人
@@ -188,7 +196,11 @@ export default {
                     poison: 0
                 }))
                 
-                uni.navigateTo({ url: '/pages/game/game' })
+                uni.navigateTo({ 
+                    url: '/pages/game/game',
+                    success: () => console.log('进入战斗'),
+                    fail: (err) => console.error('进入战斗失败:', err)
+                })
             }
         }
     }

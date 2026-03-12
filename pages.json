@@ -17,6 +17,18 @@
             "style": {
                 "navigationBarTitleText": "地图"
             }
+        },
+        {
+            "path": "pages/rest/rest",
+            "style": {
+                "navigationBarTitleText": "休息处"
+            }
+        },
+        {
+            "path": "pages/shop/shop",
+            "style": {
+                "navigationBarTitleText": "商店"
+            }
         }
     ],
     "globalStyle": {
