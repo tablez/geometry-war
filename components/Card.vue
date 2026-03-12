@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { CARDS } from '../static/game-config.js'
+import { WARRIOR_CARDS } from '../static/cards-complete.js'
 
 export default {
     props: {
@@ -73,7 +73,7 @@ export default {
     },
     computed: {
         cardData() {
-            return CARDS[this.cardId] || {}
+            return WARRIOR_CARDS[this.cardId] || {}
         },
         typeIcon() {
             const icons = {

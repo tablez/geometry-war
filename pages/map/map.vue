@@ -81,9 +81,10 @@ import {
     getFloorType, 
     generateFloorEnemies, 
     calculateEnemyStats,
-    TOWER_CONFIG 
+    TOWER_CONFIG,
+    ENEMY_TEMPLATES
 } from '../../static/tower-config.js'
-import { getCard } from '../../static/cards-complete.js'
+import { getCard } from '../static/cards-complete.js'
 
 export default {
     data() {

@@ -46,8 +46,8 @@
 </template>
 
 <script>
-import { gameState, gameActions } from '../../store/gameStore.js'
-import { WARRIOR_CARDS } from '../../static/cards-complete.js'
+import { gameState, gameActions } from '../store/gameStore.js'
+import { WARRIOR_CARDS } from '../static/cards-complete.js'
 
 export default {
     data() {

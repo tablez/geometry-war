@@ -211,8 +211,8 @@ export default {
         
         // 获取卡牌数据
         getCardData(cardId) {
-            const { CARDS } = require('../../static/game-config.js')
-            return CARDS[cardId]
+            const { WARRIOR_CARDS } = require('../../static/cards-complete.js')
+            return WARRIOR_CARDS[cardId]
         },
         
         // 点击卡牌
