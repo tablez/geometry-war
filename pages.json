@@ -1,0 +1,29 @@
+{
+    "pages": [
+        {
+            "path": "pages/index/index",
+            "style": {
+                "navigationBarTitleText": "几何战争"
+            }
+        },
+        {
+            "path": "pages/game/game",
+            "style": {
+                "navigationBarTitleText": "战斗"
+            }
+        },
+        {
+            "path": "pages/map/map",
+            "style": {
+                "navigationBarTitleText": "地图"
+            }
+        }
+    ],
+    "globalStyle": {
+        "navigationBarTextStyle": "white",
+        "navigationBarTitleText": "几何战争",
+        "navigationBarBackgroundColor": "#1a1a2e",
+        "backgroundColor": "#16213e"
+    },
+    "uniIdRouter": {}
+}
