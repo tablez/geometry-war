@@ -104,14 +104,15 @@ export default {
                 return
             }
             
-            // 获取职业ID
+            // 获取职业ID（已经是小写）
             const classId = this.classes[this.selectedClass].id
+            console.log('选择的职业ID:', classId)
             
             // 初始化游戏
             const success = gameActions.initGame(classId)
             if (!success) {
                 uni.showToast({
-                    title: '初始化失败',
+                    title: '初始化失败: ' + classId,
                     icon: 'none'
                 })
                 return
@@ -119,7 +120,17 @@ export default {
             
             // 跳转到地图页面
             uni.navigateTo({
-                url: '/pages/map/map'
+                url: '/pages/map/map',
+                success: () => {
+                    console.log('跳转成功')
+                },
+                fail: (err) => {
+                    console.error('跳转失败:', err)
+                    uni.showToast({
+                        title: '跳转失败',
+                        icon: 'none'
+                    })
+                }
             })
         }
     }
