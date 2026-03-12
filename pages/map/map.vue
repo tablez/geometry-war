@@ -125,7 +125,17 @@ export default {
             
             // 生成敌人预览
             if (this.floorType === 'normal' || this.floorType === 'elite' || this.floorType === 'boss') {
-                this.previewEnemies = generateFloorEnemies(this.currentFloor, this.floorType)
+                const enemies = generateFloorEnemies(this.currentFloor, this.floorType)
+                // 确保敌人数据完整
+                this.previewEnemies = enemies.map(e => ({
+                    ...e,
+                    maxHp: e.hp,
+                    block: 0,
+                    vulnerable: 0,
+                    weak: 0,
+                    poison: 0,
+                    nextAction: '攻击'
+                }))
             }
         },
         

@@ -221,6 +221,52 @@ const actions = {
                 state.exhaust.push(exhaustedCard);
             }
         }
+        
+        // 给予所有敌人虚弱
+        if (card.weakAll) {
+            state.enemies.forEach(enemy => {
+                enemy.weak = (enemy.weak || 0) + card.weakAll;
+            });
+        }
+        
+        // 给予所有敌人易伤
+        if (card.vulnerableAll) {
+            state.enemies.forEach(enemy => {
+                enemy.vulnerable = (enemy.vulnerable || 0) + card.vulnerableAll;
+            });
+        }
+        
+        // 敌人失去力量
+        if (card.strengthDown) {
+            state.enemies.forEach(enemy => {
+                enemy.strength = Math.max(0, (enemy.strength || 0) - card.strengthDown);
+            });
+        }
+        
+        // 护甲翻倍
+        if (card.doubleBlock) {
+            state.player.block *= 2;
+        }
+        
+        // 力量翻倍
+        if (card.doubleStrength) {
+            state.player.statusEffects.strength *= 2;
+        }
+        
+        // 虚无效果（回合结束丢弃）
+        if (card.ethereal) {
+            // 标记为虚无，在 endTurn 中处理
+        }
+        
+        // 固有效果（开局在手牌）
+        if (card.innate) {
+            // 在抽牌时处理
+        }
+        
+        // 伤口牌（负面）
+        if (card.id === 'wound') {
+            // 无法打出，直接丢弃
+        }
     },
     
     // 对敌人造成伤害

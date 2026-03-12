@@ -169,17 +169,34 @@ export default {
     methods: {
         // 初始化战斗
         initBattle() {
-            // 生成敌人
-            const enemyTypes = ['slime', 'goblin', 'slime']
-            gameState.enemies = enemyTypes.map(type => {
-                const template = ENEMIES[type]
-                return {
-                    ...template,
-                    maxHp: template.hp,
-                    block: 0,
-                    nextAction: '攻击'
-                }
-            })
+            // 使用地图页面传递的敌人，或生成默认敌人
+            if (gameState.enemies.length === 0) {
+                // 生成默认敌人
+                const enemyTypes = ['slime', 'goblin']
+                gameState.enemies = enemyTypes.map(type => {
+                    const template = ENEMIES[type]
+                    return {
+                        ...template,
+                        maxHp: template.hp,
+                        block: 0,
+                        vulnerable: 0,
+                        weak: 0,
+                        poison: 0,
+                        nextAction: '攻击 ⚔️' + template.damage
+                    }
+                })
+            } else {
+                // 确保敌人数据完整
+                gameState.enemies = gameState.enemies.map(e => ({
+                    ...e,
+                    maxHp: e.maxHp || e.hp,
+                    block: e.block || 0,
+                    vulnerable: e.vulnerable || 0,
+                    weak: e.weak || 0,
+                    poison: e.poison || 0,
+                    nextAction: e.nextAction || ('攻击 ⚔️' + (e.damage || 5))
+                }))
+            }
             
             // 开始第一回合
             gameActions.drawCards(5)
