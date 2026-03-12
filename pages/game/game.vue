@@ -2,14 +2,45 @@
     <view class="game-container">
         <!-- 顶部信息栏 -->
         <view class="top-bar">
-            <view class="player-info">
-                <text class="hp">❤️ {{ player.hp }}/{{ player.maxHp }}</text>
-                <text class="energy">⚡ {{ player.energy }}/{{ player.maxEnergy }}</text>
-                <text class="block" v-if="player.block > 0">🛡️ {{ player.block }}</text>
+            <view class="player-stats">
+                <view class="stat-item">
+                    <text class="stat-icon">❤️</text>
+                    <view class="stat-bar hp-bar">
+                        <view class="stat-fill" :style="{ width: (player.hp / player.maxHp * 100) + '%' }"></view>
+                    </view>
+                    <text class="stat-value">{{ player.hp }}/{{ player.maxHp }}</text>
+                </view>
+                <view class="stat-item">
+                    <text class="stat-icon">⚡</text>
+                    <text class="stat-value energy">{{ player.energy }}/{{ player.maxEnergy }}</text>
+                </view>
+                <view class="stat-item" v-if="player.block > 0">
+                    <text class="stat-icon">🛡️</text>
+                    <text class="stat-value block">{{ player.block }}</text>
+                </view>
             </view>
-            <view class="turn-info">
+            <view class="turn-badge">
                 <text>回合 {{ turn }}</text>
             </view>
+        </view>
+        
+        <!-- 状态效果显示 -->
+        <view class="status-bar" v-if="hasStatusEffects">
+            <text v-if="player.statusEffects.strength > 0" class="status-badge strength">
+                💪 {{ player.statusEffects.strength }}
+            </text>
+            <text v-if="player.statusEffects.dexterity > 0" class="status-badge dexterity">
+                ⚡ {{ player.statusEffects.dexterity }}
+            </text>
+            <text v-if="player.statusEffects.vulnerable > 0" class="status-badge vulnerable">
+                💔 {{ player.statusEffects.vulnerable }}
+            </text>
+            <text v-if="player.statusEffects.weak > 0" class="status-badge weak">
+                💫 {{ player.statusEffects.weak }}
+            </text>
+            <text v-if="player.statusEffects.poison > 0" class="status-badge poison">
+                ☠️ {{ player.statusEffects.poison }}
+            </text>
         </view>
         
         <!-- 敌人区域 -->
@@ -18,24 +49,38 @@
                 v-for="(enemy, index) in enemies" 
                 :key="index"
                 class="enemy"
-                :class="{ target: selectedTarget === index }"
+                :class="{ 
+                    target: selectedTarget === index,
+                    elite: enemy.isElite,
+                    boss: enemy.isBoss 
+                }"
                 @click="selectTarget(index)"
             >
-                <view class="enemy-icon" :style="{ backgroundColor: enemy.color }">
-                    <text>{{ enemy.icon }}</text>
-                </view>
-                <view class="enemy-hp-bar">
-                    <view class="hp-fill" :style="{ width: (enemy.hp / enemy.maxHp * 100) + '%' }"></view>
+                <view class="enemy-frame" :style="{ borderColor: enemy.color }">
+                    <view class="enemy-icon">{{ enemy.icon }}</view>
+                    <view class="enemy-hp-bar">
+                        <view class="hp-fill" :style="{ 
+                            width: (enemy.hp / enemy.maxHp * 100) + '%',
+                            backgroundColor: enemy.color 
+                        }"></view>
+                    </view>
+                    <text class="enemy-hp-text">{{ enemy.hp }}/{{ enemy.maxHp }}</text>
                 </view>
                 <text class="enemy-name">{{ enemy.name }}</text>
-                <text class="enemy-intent">{{ enemy.nextAction }}</text>
+                <view class="enemy-intent">
+                    <text>{{ enemy.nextAction }}</text>
+                    <text v-if="enemy.damage" class="intent-damage">⚔️{{ enemy.damage }}</text>
+                </view>
             </view>
         </view>
         
         <!-- 手牌区域 -->
         <view class="hand-area">
-            <view class="hand-label">手牌 ({{ hand.length }}/10)</view>
-            <scroll-view class="hand-scroll" scroll-x>
+            <view class="hand-header">
+                <text class="hand-label">手牌</text>
+                <text class="hand-count">{{ hand.length }}/10</text>
+            </view>
+            <scroll-view class="hand-scroll" scroll-x :scroll-left="scrollLeft">
                 <view class="hand-cards">
                     <Card 
                         v-for="(cardId, index) in hand" 
@@ -81,6 +126,14 @@ export default {
             logMessages: []
         }
     },
+    data() {
+        return {
+            selectedCard: -1,
+            selectedTarget: -1,
+            logMessages: [],
+            scrollLeft: 0
+        }
+    },
     computed: {
         player() {
             return gameState.player
@@ -99,6 +152,14 @@ export default {
         },
         turn() {
             return gameState.turn
+        },
+        hasStatusEffects() {
+            const effects = gameState.player.statusEffects
+            return effects.strength > 0 || 
+                   effects.dexterity > 0 || 
+                   effects.vulnerable > 0 || 
+                   effects.weak > 0 || 
+                   effects.poison > 0
         }
     },
     onLoad() {
