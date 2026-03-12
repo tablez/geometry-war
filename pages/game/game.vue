@@ -215,24 +215,51 @@ export default {
         // 游戏结束
         gameOver(victory) {
             if (victory) {
-                uni.showModal({
-                    title: '胜利！',
-                    content: '敌人被全部消灭',
-                    showCancel: false,
-                    success: () => {
-                        uni.navigateBack()
-                    }
+                // 判断战斗类型
+                const floorType = this.getBattleType()
+                
+                uni.showToast({
+                    title: '战斗胜利！',
+                    icon: 'success',
+                    duration: 1000
                 })
+                
+                // 延迟后跳转到奖励页面
+                setTimeout(() => {
+                    uni.navigateTo({
+                        url: `/pages/reward/reward?type=${floorType}`
+                    })
+                }, 1000)
             } else {
+                // 游戏结束，返回首页
                 uni.showModal({
-                    title: '失败',
-                    content: '你被击败了',
+                    title: '游戏结束',
+                    content: `你到达了第 ${gameState.currentRun.floor} 层`,
                     showCancel: false,
                     success: () => {
-                        uni.navigateBack()
+                        // 更新最佳记录
+                        if (gameState.currentRun.floor > gameState.bestScore) {
+                            gameState.bestScore = gameState.currentRun.floor
+                        }
+                        gameState.gamesPlayed++
+                        gameActions.saveGameData()
+                        
+                        // 返回首页
+                        uni.reLaunch({
+                            url: '/pages/index/index'
+                        })
                     }
                 })
             }
+        },
+        
+        // 获取战斗类型
+        getBattleType() {
+            const floor = gameState.currentRun.floor
+            if (floor % 10 === 0) return 'boss'
+            // 简单判断：精英敌人血量>50视为精英战
+            const hasElite = gameState.enemies.some(e => e.maxHp > 50)
+            return hasElite ? 'elite' : 'normal'
         },
         
         // 添加战斗日志

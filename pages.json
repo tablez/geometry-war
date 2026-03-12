@@ -29,6 +29,12 @@
             "style": {
                 "navigationBarTitleText": "商店"
             }
+        },
+        {
+            "path": "pages/reward/reward",
+            "style": {
+                "navigationBarTitleText": "战斗奖励"
+            }
         }
     ],
     "globalStyle": {
