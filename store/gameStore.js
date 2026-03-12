@@ -4,6 +4,8 @@
  */
 
 import { reactive, readonly } from 'vue';
+import { CLASSES } from '../static/game-config.js';
+import { WARRIOR_CARDS } from '../static/cards-complete.js';
 
 // 游戏状态
 const state = reactive({
@@ -52,7 +54,6 @@ const state = reactive({
 const actions = {
     // 初始化新游戏
     initGame(classId) {
-        const { CLASSES } = require('../static/game-config.js');
         // 支持大小写
         const upperClassId = classId.toUpperCase();
         const classData = CLASSES[upperClassId];
@@ -95,7 +96,6 @@ const actions = {
     
     // 抽牌
     drawCards(count) {
-        const { GAME_CONFIG } = require('../static/game-config.js');
         for (let i = 0; i < count; i++) {
             // 如果手牌满了，停止抽牌
             if (state.hand.length >= GAME_CONFIG.MAX_HAND_SIZE) break;
@@ -115,9 +115,8 @@ const actions = {
     
     // 出牌
     playCard(cardIndex, targetIndex = null) {
-        const { CARDS } = require('../static/game-config.js');
         const cardId = state.hand[cardIndex];
-        const card = CARDS[cardId];
+        const card = WARRIOR_CARDS[cardId];
         
         if (!card) return false;
         if (card.cost > state.player.energy) return false;
