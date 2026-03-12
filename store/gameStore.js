@@ -284,19 +284,29 @@ const actions = {
     
     // 敌人行动
     enemyActions() {
-        state.enemies.forEach(enemy => {
+        state.enemies.forEach((enemy, index) => {
             // 敌人中毒伤害
             if (enemy.poison > 0) {
                 enemy.hp -= enemy.poison;
                 enemy.poison--;
             }
             
+            // 检查敌人死亡（中毒）
+            if (enemy.hp <= 0) {
+                this.handleEnemyDeath(index);
+                return;
+            }
+            
+            // 执行敌人特殊能力
+            this.executeEnemyAbility(enemy, index);
+            
             // 简单AI：直接攻击玩家
             let damage = enemy.damage || 5;
             
-            // 敌人易伤（受到更多伤害）
-            if (enemy.vulnerable > 0) {
-                damage = Math.floor(damage * 1.5);
+            // 敌人虚弱（造成更少伤害）
+            if (enemy.weak > 0) {
+                damage = Math.floor(damage * 0.75);
+                enemy.weak--;
             }
             
             // 先扣玩家护甲
@@ -307,8 +317,95 @@ const actions = {
             }
             
             // 再扣玩家血量
-            state.player.hp -= damage;
+            if (damage > 0) {
+                state.player.hp -= damage;
+                
+                // 触发玩家受伤效果（如破裂）
+                this.onPlayerDamaged();
+            }
+            
+            // 减少敌人状态持续时间
+            if (enemy.vulnerable > 0) enemy.vulnerable--;
         });
+    },
+    
+    // 执行敌人特殊能力
+    executeEnemyAbility(enemy, index) {
+        if (!enemy.special) return;
+        
+        switch (enemy.special) {
+            case 'split':
+                // 史莱姆分裂：血量低于50%时分裂
+                if (enemy.hp < enemy.maxHp * 0.5 && !enemy.hasSplit) {
+                    enemy.hasSplit = true;
+                    // 创建两个小史莱姆
+                    const babySlime = {
+                        ...enemy,
+                        hp: Math.floor(enemy.maxHp * 0.3),
+                        maxHp: Math.floor(enemy.maxHp * 0.3),
+                        damage: Math.floor(enemy.damage * 0.5),
+                        special: null
+                    };
+                    state.enemies.push(babySlime);
+                }
+                break;
+                
+            case 'summon':
+                // 哥布林召唤：每3回合召唤一个小怪
+                if (state.turn % 3 === 0) {
+                    const goblin = {
+                        name: '哥布林小弟',
+                        icon: '👶',
+                        hp: 15,
+                        maxHp: 15,
+                        damage: 3,
+                        color: '#8BC34A'
+                    };
+                    state.enemies.push(goblin);
+                }
+                break;
+                
+            case 'revive':
+                // 骷髅复活：死亡时复活一次
+                // 在 handleEnemyDeath 中处理
+                break;
+                
+            case 'armor':
+                // 高护甲敌人：每回合获得护甲
+                enemy.block = (enemy.block || 0) + 5;
+                break;
+                
+            case 'rage':
+                // 狂暴：血量低于30%时伤害翻倍
+                if (enemy.hp < enemy.maxHp * 0.3) {
+                    enemy.damage = Math.floor(enemy.damage * 1.5);
+                }
+                break;
+        }
+    },
+    
+    // 处理敌人死亡
+    handleEnemyDeath(index) {
+        const enemy = state.enemies[index];
+        
+        // 检查复活
+        if (enemy.special === 'revive' && !enemy.hasRevived) {
+            enemy.hasRevived = true;
+            enemy.hp = Math.floor(enemy.maxHp * 0.5);
+            return; // 不删除，复活
+        }
+        
+        // 删除敌人
+        state.enemies.splice(index, 1);
+        
+        // 触发击杀效果（如吞噬）
+        // TODO: 实现击杀效果
+    },
+    
+    // 玩家受伤时触发的效果
+    onPlayerDamaged() {
+        // 破裂：受伤时获得力量
+        // TODO: 检查是否有破裂能力
     },
     
     // 处理状态效果
