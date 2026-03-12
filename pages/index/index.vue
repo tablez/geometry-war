@@ -117,9 +117,9 @@ export default {
                 return
             }
             
-            // 跳转到游戏页面
+            // 跳转到地图页面
             uni.navigateTo({
-                url: '/pages/game/game'
+                url: '/pages/map/map'
             })
         }
     }
