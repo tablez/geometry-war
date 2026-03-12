@@ -35,7 +35,7 @@ export const WARRIOR_CARDS = {
         selfDamage: 3,
         energy: 2,
         description: '失去3点生命，获得2点能量',
-        upgrade: { selfDamage: 2, energy: 3, description: '失去2点生命，获得3点能量' }
+        upgrade: { selfDamage: 2, description: '失去2点生命，获得2点能量' }
     },
     
     blood_for_blood: {
@@ -77,11 +77,11 @@ export const WARRIOR_CARDS = {
         name: '吞噬',
         type: 'attack',
         cost: 1,
-        damage: 10,
+        damage: 8,
         healOnKill: 3,
         maxHpOnKill: 1,
-        description: '造成10点伤害，击杀敌人时回复3生命并永久+1最大生命',
-        upgrade: { damage: 12, healOnKill: 4, maxHpOnKill: 2, description: '造成12点伤害，击杀时回复4生命并+2最大生命' }
+        description: '造成8点伤害，击杀敌人时回复3生命并永久+1最大生命',
+        upgrade: { damage: 10, healOnKill: 4, maxHpOnKill: 2, description: '造成10点伤害，击杀时回复4生命并+2最大生命' }
     },
     
     reaper: {

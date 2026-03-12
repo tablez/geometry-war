@@ -257,11 +257,45 @@ export default {
             const cardId = this.hand[cardIndex]
             const card = this.getCardData(cardId)
             
+            // 检查能量
+            if (card.cost > this.player.energy) {
+                uni.showToast({
+                    title: '能量不足',
+                    icon: 'none',
+                    duration: 1000
+                })
+                return
+            }
+            
+            // 攻击牌需要目标
+            if (card.type === 'attack' && targetIndex === null && !card.aoe) {
+                uni.showToast({
+                    title: '请选择目标',
+                    icon: 'none',
+                    duration: 1000
+                })
+                return
+            }
+            
             // 执行出牌
             const success = gameActions.playCard(cardIndex, targetIndex)
             
             if (success) {
-                this.addLog(`使用了 ${card.name}`)
+                // 显示效果提示
+                let effectMsg = `使用了 ${card.name}`
+                if (card.damage) effectMsg += ` ⚔️${card.damage}`
+                if (card.block) effectMsg += ` 🛡️${card.block}`
+                if (card.heal) effectMsg += ` 💚${card.heal}`
+                if (card.draw) effectMsg += ` 📥${card.draw}`
+                
+                this.addLog(effectMsg)
+                
+                // 显示Toast
+                uni.showToast({
+                    title: card.name,
+                    icon: 'none',
+                    duration: 800
+                })
                 
                 // 重置选择
                 this.selectedCard = -1

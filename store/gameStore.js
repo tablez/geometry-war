@@ -346,14 +346,22 @@ const actions = {
             // 执行敌人特殊能力
             this.executeEnemyAbility(enemy, index);
             
-            // 简单AI：直接攻击玩家
+            // 重新检查死亡（能力可能造成伤害）
+            if (enemy.hp <= 0) {
+                this.handleEnemyDeath(index);
+                return;
+            }
+            
+            // 计算伤害
             let damage = enemy.damage || 5;
             
             // 敌人虚弱（造成更少伤害）
             if (enemy.weak > 0) {
                 damage = Math.floor(damage * 0.75);
-                enemy.weak--;
             }
+            
+            // 更新下回合意图
+            enemy.nextAction = `攻击 ⚔️${damage}`;
             
             // 先扣玩家护甲
             if (state.player.block > 0) {
@@ -372,6 +380,7 @@ const actions = {
             
             // 减少敌人状态持续时间
             if (enemy.vulnerable > 0) enemy.vulnerable--;
+            if (enemy.weak > 0) enemy.weak--;
         });
     },
     
