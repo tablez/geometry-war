@@ -113,19 +113,13 @@
 </template>
 
 <script>
-import Card from '../../components/Card.vue'
-import { gameState, gameActions } from '../../store/gameStore.js'
-import { ENEMIES } from '../../static/game-config.js'
+import Card from '../components/Card.vue'
+import { gameState, gameActions } from '../store/gameStore.js'
+import { ENEMIES } from '../static/game-config.js'
+import { WARRIOR_CARDS } from '../../static/cards-complete.js'
 
 export default {
     components: { Card },
-    data() {
-        return {
-            selectedCard: -1,
-            selectedTarget: -1,
-            logMessages: []
-        }
-    },
     data() {
         return {
             selectedCard: -1,
@@ -211,7 +205,6 @@ export default {
         
         // 获取卡牌数据
         getCardData(cardId) {
-            const { WARRIOR_CARDS } = require('../../static/cards-complete.js')
             return WARRIOR_CARDS[cardId]
         },
         
