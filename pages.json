@@ -35,6 +35,12 @@
             "style": {
                 "navigationBarTitleText": "战斗奖励"
             }
+        },
+        {
+            "path": "pages/card-upgrade/card-upgrade",
+            "style": {
+                "navigationBarTitleText": "升级卡牌"
+            }
         }
     ],
     "globalStyle": {
