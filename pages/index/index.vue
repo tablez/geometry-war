@@ -57,8 +57,8 @@
 </template>
 
 <script>
-import { CLASSES } from '../../static/game-config.js'
-import { gameState, gameActions } from '../../store/gameStore.js'
+import { CLASSES } from '../static/game-config.js'
+import { gameState, gameActions } from '../store/gameStore.js'
 
 export default {
     data() {
