@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>几何尖塔 - Geometry War</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 首页 */
+        .home-screen {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .title {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #e94560 0%, #533483 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #a0a0a0;
+            margin-bottom: 40px;
+        }
+        
+        .class-selection {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .class-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #444;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .class-card:hover {
+            border-color: #e94560;
+            transform: translateY(-5px);
+        }
+        
+        .class-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .class-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e94560;
+        }
+        
+        .class-desc {
+            font-size: 14px;
+            color: #a0a0a0;
+            margin-top: 5px;
+        }
+        
+        /* 游戏屏幕 */
+        .game-screen {
+            display: none;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .player-stats {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .hp-bar {
+            width: 100px;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .hp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
+            transition: width 0.3s;
+        }
+        
+        .floor-info {
+            text-align: right;
+        }
+        
+        .floor-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e94560;
+        }
+        
+        /* 地图 */
+        .map-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .map-path {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .map-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .map-node.current {
+            background: rgba(233, 69, 96, 0.3);
+            border: 2px solid #e94560;
+        }
+        
+        .node-icon {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+        
+        .node-floor {
+            font-size: 12px;
+            color: #a0a0a0;
+        }
+        
+        /* 按钮 */
+        .btn {
+            background: linear-gradient(135deg, #e94560 0%, #533483 100%);
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        /* 隐藏 */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 首页 -->
+        <div id="homeScreen" class="home-screen">
+            <h1 class="title">几何尖塔</h1>
+            <p class="subtitle">选择你的职业开始冒险</p>
+            
+            <div class="class-selection">
+                <div class="class-card" onclick="selectClass('warrior')">
+                    <div class="class-icon">⚔️</div>
+                    <div class="class-name">战士</div>
+                    <div class="class-desc">高生命，强力攻击</div>
+                </div>
+                <div class="class-card" onclick="selectClass('mage')">
+                    <div class="class-icon">🔮</div>
+                    <div class="class-name">法师</div>
+                    <div class="class-desc">高能量，法术伤害</div>
+                </div>
+                <div class="class-card" onclick="selectClass('assassin')">
+                    <div class="class-icon">🗡️</div>
+                    <div class="class-name">刺客</div>
+                    <div class="class-desc">高暴击，快速连击</div>
+                </div>
+                <div class="class-card" onclick="selectClass('priest')">
+                    <div class="class-icon">✨</div>
+                    <div class="class-name">牧师</div>
+                    <div class="class-desc">治疗回复，辅助增益</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 地图 -->
+        <div id="mapScreen" class="game-screen">
+            <div class="top-bar">
+                <div class="player-stats">
+                    <div class="stat">
+                        ❤️ <div class="hp-bar"><div class="hp-fill" id="hpFill" style="width: 100%"></div></div>
+                        <span id="hpText">80/80</span>
+                    </div>
+                    <div class="stat">⚡ <span id="energyText">3/3</span></div>
+                </div>
+                <div class="floor-info">
+                    <div class="floor-number">第 <span id="floorNum">1</span> 层</div>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <div class="map-path" id="mapPath">
+                    <!-- 动态生成 -->
+                </div>
+            </div>
+            
+            <button class="btn" onclick="enterFloor()">进入楼层</button>
+        </div>
+    </div>
+    
+    <script>
+        // 游戏状态
+        const gameState = {
+            player: {
+                classId: '',
+                hp: 80,
+                maxHp: 80,
+                energy: 3,
+                maxEnergy: 3
+            },
+            currentFloor: 1,
+            deck: []
+        };
+        
+        // 职业配置
+        const classes = {
+            warrior: { hp: 80, energy: 3, icon: '⚔️', name: '战士' },
+            mage: { hp: 60, energy: 4, icon: '🔮', name: '法师' },
+            assassin: { hp: 65, energy: 4, icon: '🗡️', name: '刺客' },
+            priest: { hp: 70, energy: 3, icon: '✨', name: '牧师' }
+        };
+        
+        // 选择职业
+        function select
