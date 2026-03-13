@@ -76,15 +76,15 @@
 </template>
 
 <script>
-import { gameState, gameActions } from '../../store/gameStore.js'
+import { gameState, gameActions } from '../store/gameStore.js'
 import { 
     getFloorType, 
     generateFloorEnemies, 
     calculateEnemyStats,
     TOWER_CONFIG,
     ENEMY_TEMPLATES
-} from '../../static/tower-config.js'
-import { getCard } from '../static/cards-complete.js'
+} from '../static/tower-config.js'
+import { getCard } from '../../static/cards-complete.js'
 
 export default {
     data() {
